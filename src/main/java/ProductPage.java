@@ -1,6 +1,7 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
@@ -48,6 +49,7 @@ class ProductPage extends AbstractPage{
     ItemCartPage buyProduct() {
         ProductsContainer.getInstance().addToContainer(this);
         productBuy.click();
+        new Actions(driver).pause(500).build().perform();
         return new ItemCartPage();
     }
 
@@ -61,7 +63,7 @@ class ProductPage extends AbstractPage{
     @FindBy(xpath = "//div[contains(@class, 'hidden-xs')]//span[contains(@class, 'current-price-value')]")
     private WebElement productPrice;
 
-    @FindBy(xpath = "//button//span[contains(text(), 'Купить')]")
+    @FindBy(xpath = "//button[@class = 'btn btn-cart btn-lg']/span")
     private WebElement productBuy;
 
 

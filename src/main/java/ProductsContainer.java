@@ -36,18 +36,25 @@ class ProductsContainer {
     }
 
 
-    public String toString() {
+    void printItems() {
         productsContainer.forEach(pc -> System.out.println(pc.getName() + ": " + pc.getPrice() + " warranty: " + pc.getWarranty()));
-        return null;
     }
 
-    public int getFullPrice() {
+    int getFullPrice() {
         int price = 0;
         for (ProductPage page: productsContainer) {
             price += page.getPrice();
         }
         return price;
 
+    }
+
+    public int getFullPriceRemoved() {
+        int price = 0;
+        for (ProductPage page: removedItems) {
+            price += page.getPrice();
+        }
+        return price;
     }
 
     //    private int price;
