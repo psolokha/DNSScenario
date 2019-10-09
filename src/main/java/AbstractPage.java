@@ -4,11 +4,11 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public abstract class AbstractPage {
+abstract class AbstractPage {
 
-    private WebDriver driver;
+    WebDriver driver;
 
-    public AbstractPage(){
+    AbstractPage(){
         this.driver = InitDriver.getInstance();
         PageFactory.initElements(driver, this);
     }
@@ -16,19 +16,31 @@ public abstract class AbstractPage {
     @FindBy(xpath = "//nav//input")
     WebElement inputSearch;
 
-    @FindBy(xpath = "//a[@class = 'btn-cart-link']")
-    WebElement buttonCart;
+    @FindBy(xpath = "//nav//span[@data-of='totalPrice']")
+    private WebElement buttonCart;
 
-    @FindBy(tagName = "title")
+    @FindBy(xpath = "//title[text() != '']")
     WebElement titleText;
 
-    public ItemCartPage goToCart() {
+    ItemCartPage goToCart() {
         buttonCart.click();
         return new ItemCartPage();
     }
 
-    public void waitElement(WebElement element) {
+    void clickElement(String xpath) {
+        driver.findElement(By.xpath(xpath)).click();
+    }
+
+    void waitElement(WebElement element) {
         new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    SearchResultPage searchItem(String item) {
+        waitElement(inputSearch);
+        inputSearch.click();
+        inputSearch.sendKeys(item);
+        inputSearch.sendKeys(Keys.ENTER);
+        return new SearchResultPage();
     }
 
 

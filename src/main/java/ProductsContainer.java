@@ -1,37 +1,56 @@
-import org.openqa.selenium.WebElement;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ProductsContainer {
+class ProductsContainer {
 
 
-    private List<WebElement> productsContainer;
+    private List<ProductPage> productsContainer;
+    private List<ProductPage> removedItems;
     private static ProductsContainer instance;
 
     private ProductsContainer(){
         productsContainer = new ArrayList<>();
+        removedItems = new ArrayList<>();
     }
 
-    public static ProductsContainer getInstance() {
+    static ProductsContainer getInstance() {
         return instance == null ? instance = new ProductsContainer() : instance;
     }
 
-    public WebElement getLastAdded() {
-        return productsContainer.get(productsContainer.size()-1);
+    void addToContainer(ProductPage product) {
+        productsContainer.add(product);
     }
 
-    public void addProductToContainer(List<WebElement> productsList, String description) {
-        productsContainer.add((WebElement) productsList.stream().filter(product -> {
-            return product.getText().contains(description);
-        }).toArray()[0]);
+    void addAllRemovedItems() {
+        productsContainer.addAll(removedItems);
     }
 
-    public void removeProductFromContainer(WebElement element) {
-        productsContainer.remove(element);
+    void removeFromContainer(String product) {
+        removedItems.add(getItem(product));
+        productsContainer = productsContainer.stream().filter(c -> !c.getName().contains(product)).collect(Collectors.toList());
     }
 
-//    private int price;
+    ProductPage getItem(String product) {
+        return (ProductPage) productsContainer.stream().filter(c -> c.getName().contains(product)).toArray()[0];
+    }
+
+
+    public String toString() {
+        productsContainer.forEach(pc -> System.out.println(pc.getName() + ": " + pc.getPrice() + " warranty: " + pc.getWarranty()));
+        return null;
+    }
+
+    public int getFullPrice() {
+        int price = 0;
+        for (ProductPage page: productsContainer) {
+            price += page.getPrice();
+        }
+        return price;
+
+    }
+
+    //    private int price;
 //    private int warranty;
 //    private String description;
 //
